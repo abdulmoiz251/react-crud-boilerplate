@@ -37,7 +37,7 @@ class App extends Component {
 
           <div className="container mt-3">
             <Switch>
-              <Route exact path={["/", "/users"]} component={UserCreate} />
+              <Route exact path={["/", "/users"]} component={UserList} />
               <Route exact path="/users/create" component={UserCreate} />
               <Route path="/users/edit/:id" component={UserEdit} />
             </Switch>

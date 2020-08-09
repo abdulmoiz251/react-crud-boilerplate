@@ -1,101 +1,132 @@
 import React, { Component } from 'react';
-// import './App.css';
+import UserService from "../../services/user.service";
 
 class UserEdit extends Component {
   constructor(props) {
     super(props)
-    this.state = { color: 'red', name: '', desc: '', error_msg: '', gender: '' }
+    
+    this.state = { 
+      name: '', 
+      bio: '', 
+      gender: '',
+      email: '',
+      error_msg: '', 
+    }
   }
 
 
   /*
-    EVENTS
+    EVENTS & HOOKS
   */
-  func1(param1, param2, event) { //event is passed as last argument
-    console.log(param1, param2);
-    console.log(event.type);
-  }
-
   onChange(event) {
     let input = {}
     input[event.target.name] = event.target.value
     this.setState(input)
   }
 
-  onSubmit(event) {
-    event.preventDefault();
-    this.validate()
+  componentDidMount() {
+    this.getData(this.props.match.params.id);
+  }
 
-    console.log(this.state);
+  save(event) {
+    event.preventDefault()
+
+    let data = {
+      name: this.state.name, 
+      bio: this.state.bio, 
+      gender: this.state.gender,
+      email: this.state.email,
+    }
+
+    UserService.update(this.props.match.params.id, data)
+      .then(response => {
+        console.log('response.data ---');
+        console.log(response.data);
+        // redirect to users list
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
 
   /*
     CUSTOM FUNCTIONS
   */
-  validate() {
-    let error = ''
-    if (!this.state.name) {
-      error = "Name is required"
-    }
-    else if (!this.state.gender) {
-      error = "Gender is required"
-    }
-    
-    this.generateError(error)
-    console.log('validated');
-  }
-
-  generateError(msg) {
-    this.setState({ error_msg: <b>{msg}</b> })
+  getData(id) {
+    UserService.get(id)
+      .then(response => {
+        if (response.data) {
+          this.setState({
+            name: response.data.name, 
+            bio: response.data.bio, 
+            gender: response.data.gender,
+            email: response.data.email
+          });
+        }
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
 
   render() {
-    let header = '';
-    if (this.state.name) {
-      header = <h1>Hello {this.state.name}</h1>;
-    } else {
-      header = '';
-    }
-
     return (
-      <div className="App">
-        <h1>Here we go, state: {this.state.color} and the prop: {this.props.attr1}</h1>
-        {header}
-        
-        <form onSubmit={this.onSubmit.bind(this)}>
-          <p>Enter your name:</p>
-          <input
-            type='text'
-            name="name"
-            onChange={this.onChange.bind(this)}
-          />
+      <div className="submit-form">
+        <form onSubmit={this.save.bind(this)}>
+          <div className="form-group">
+            <label htmlFor="name">Enter your name</label>
+            <input
+              type='text'
+              name="name"
+              className="form-control"
+              required
+              value={this.state.name} 
+              onChange={this.onChange.bind(this)}
+            />
+          </div>
 
-          <input
-            type='text'
-            name="desc"
-            onChange={this.onChange.bind(this)}
-          />
+          <div className="form-group">
+            <label htmlFor="email">Enter your email</label>
+            <input
+              type='text'
+              name="email"
+              className="form-control"
+              required
+              value={this.state.email} 
+              onChange={this.onChange.bind(this)}
+            />
+          </div>
 
-          <select 
-            value={this.state.gender} 
-            name="gender" 
-            onChange={this.onChange.bind(this)}
-          >
-            <option value="0">- Select -</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
+          <div className="form-group">
+            <label htmlFor="bio">Enter your bio</label>
+            <input
+              type='text'
+              name="bio"
+              className="form-control"
+              value={this.state.bio} 
+              onChange={this.onChange.bind(this)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="gender">Enter your gender</label>
+            <select 
+              value={this.state.gender} 
+              name="gender" 
+              className="form-control"
+              onChange={this.onChange.bind(this)}
+            >
+              <option value="0">- Select -</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
           
-          {this.state.error_msg}
-
-          <input
-            type='submit'
-          />
+          <input type='submit' className="btn btn-primary" value="Save" />
         </form>
-
-        <button onClick={this.func1.bind(this, "Goal", "param2")}>Take the shot!</button>
       </div>
     );
   }

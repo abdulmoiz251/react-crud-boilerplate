@@ -20,11 +20,6 @@ class UserCreate extends Component {
   /*
     EVENTS
   */
-  // func1(param1, param2, event) { //event is passed as last argument
-  //   console.log(param1, param2);
-  //   console.log(event.type);
-  // }
-
   onChange(event) {
     let input = {}
     input[event.target.name] = event.target.value
@@ -84,16 +79,9 @@ class UserCreate extends Component {
 
 
   render() {
-    // let header = '';
-    // if (this.state.name) {
-    //   header = <h1>Hello {this.state.name}</h1>;
-    // } else {
-    //   header = '';
-    // }
     let header = <h2>Create new user</h2>;
 
     return (
-      // <div className="App">
       <div className="submit-form">
         {header}
         
@@ -104,7 +92,7 @@ class UserCreate extends Component {
               type='text'
               name="name"
               className="form-control"
-              // required
+              required
               onChange={this.onChange.bind(this)}
             />
           </div>
@@ -115,7 +103,7 @@ class UserCreate extends Component {
               type='text'
               name="email"
               className="form-control"
-              // required
+              required
               onChange={this.onChange.bind(this)}
             />
           </div>
@@ -148,8 +136,6 @@ class UserCreate extends Component {
 
           <input type='submit' className="btn btn-primary" value="Save" />
         </form>
-
-        {/* <button className="btn btn-primary" onClick={this.save.bind(this)}>Take the shot!</button> */}
       </div>
     );
   }
